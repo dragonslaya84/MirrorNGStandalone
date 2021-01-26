@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.Extensions.Logging;
 #if NETSTANDARD
+using Microsoft.Extensions.Logging;
 using UnityEngine;
 #endif
 

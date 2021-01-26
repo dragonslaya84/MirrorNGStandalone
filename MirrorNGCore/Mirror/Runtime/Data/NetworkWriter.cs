@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Mirror.Runtime.Common;
 using Mirror.Runtime.Logging;
 using Mirror.Runtime.Utils;
 
