@@ -407,6 +407,7 @@ namespace Mirror.Runtime.Data
 #endif
         }
 
+#if FIX
         public static void WriteVector2Int(this NetworkWriter writer, Vector2Int value)
         {
             writer.WritePackedInt32(value.x);
@@ -419,6 +420,7 @@ namespace Mirror.Runtime.Data
             writer.WritePackedInt32(value.y);
             writer.WritePackedInt32(value.z);
         }
+#endif
 
         public static void WriteColor(this NetworkWriter writer, Color value)
         {
@@ -435,6 +437,7 @@ namespace Mirror.Runtime.Data
 #endif
         }
 
+#if FIX
         public static void WriteColor32(this NetworkWriter writer, Color32 value)
         {
             writer.WriteByte(value.r);
@@ -442,7 +445,7 @@ namespace Mirror.Runtime.Data
             writer.WriteByte(value.b);
             writer.WriteByte(value.a);
         }
-
+#endif
         public static void WriteQuaternion(this NetworkWriter writer, Quaternion value)
         {
 #if NETSTANDARD
@@ -458,6 +461,7 @@ namespace Mirror.Runtime.Data
 #endif
         }
 
+#if FIX
         public static void WriteRect(this NetworkWriter writer, Rect value)
         {
             writer.WriteSingle(value.xMin);
@@ -465,6 +469,7 @@ namespace Mirror.Runtime.Data
             writer.WriteSingle(value.width);
             writer.WriteSingle(value.height);
         }
+#endif
 
         public static void WritePlane(this NetworkWriter writer, Plane value)
         {
@@ -477,11 +482,13 @@ namespace Mirror.Runtime.Data
 #endif
         }
 
+#if FIX
         public static void WriteRay(this NetworkWriter writer, Ray value)
         {
             writer.WriteVector3(value.origin);
             writer.WriteVector3(value.direction);
         }
+#endif
 
         public static void WriteMatrix4X4(this NetworkWriter writer, Matrix4x4 value)
         {
@@ -529,6 +536,7 @@ namespace Mirror.Runtime.Data
             writer.WriteBytes(data, 0, data.Length);
         }
 
+#if FIX
         public static void WriteNetworkIdentity(this NetworkWriter writer, NetworkIdentity value)
         {
             if (value == null)
@@ -538,6 +546,7 @@ namespace Mirror.Runtime.Data
             }
             writer.WritePackedUInt32(value.NetId);
         }
+#endif
 
         public static void WriteUri(this NetworkWriter writer, Uri uri)
         {
@@ -578,6 +587,7 @@ namespace Mirror.Runtime.Data
             }
         }
 
+#if FIX
         public static void WriteNetworkBehaviour(this NetworkWriter writer, NetworkBehaviour value)
         {
             if (value == null)
@@ -604,5 +614,6 @@ namespace Mirror.Runtime.Data
 
             writer.WriteNetworkIdentity(identity);
         }
+#endif
     }
 }

@@ -8,6 +8,66 @@ using System.Numerics;
 
 namespace Mirror.Runtime.Common
 {
+    #region Public System Messages
+
+    public struct ReadyMessage { }
+
+    public struct NotReadyMessage { }
+
+    public struct AddPlayerMessage { }
+
+    public struct SceneMessage
+    {
+        public string scenePath;
+        // Normal = 0, LoadAdditive = 1, UnloadAdditive = 2
+        public SceneOperation sceneOperation;
+        public string[] additiveScenes;
+    }
+
+    public struct SceneReadyMessage { }
+
+    public enum SceneOperation : byte
+    {
+        Normal,
+        LoadAdditive,
+        UnloadAdditive
+    }
+
+    #endregion
+
+    #region System Messages requried for code gen path
+    public struct ServerRpcMessage
+    {
+        public uint netId;
+        public int componentIndex;
+        public int functionHash;
+
+        // if the server Rpc can return values
+        // this then a ServerRpcReply will be sent with this id
+        public int replyId;
+        // the parameters for the Cmd function
+        // -> ArraySegment to avoid unnecessary allocations
+        public ArraySegment<byte> payload;
+    }
+
+    public struct ServerRpcReply
+    {
+        public int replyId;
+        public ArraySegment<byte> payload;
+    }
+
+    public struct RpcMessage
+    {
+        public uint netId;
+        public int componentIndex;
+        public int functionHash;
+        // the parameters for the Cmd function
+        // -> ArraySegment to avoid unnecessary allocations
+        public ArraySegment<byte> payload;
+    }
+    #endregion
+
+    #region Internal System Messages
     public struct SpawnMessage
     {
         /// <summary>
@@ -49,4 +109,38 @@ namespace Mirror.Runtime.Common
         /// </summary>
         public ArraySegment<byte> payload;
     }
+
+    public struct ObjectDestroyMessage
+    {
+        public uint netId;
+    }
+
+    public struct ObjectHideMessage
+    {
+        public uint netId;
+    }
+
+    public struct UpdateVarsMessage
+    {
+        public uint netId;
+        // the serialized component data
+        // -> ArraySegment to avoid unnecessary allocations
+        public ArraySegment<byte> payload;
+    }
+
+    // A client sends this message to the server
+    // to calculate RTT and synchronize time
+    public struct NetworkPingMessage
+    {
+        public double clientTime;
+    }
+
+    // The server responds with this message
+    // The client can use this to calculate RTT and sync time
+    public struct NetworkPongMessage
+    {
+        public double clientTime;
+        public double serverTime;
+    }
+    #endregion
 }

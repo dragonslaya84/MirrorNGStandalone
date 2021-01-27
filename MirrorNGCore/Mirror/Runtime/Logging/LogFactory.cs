@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 #if NETSTANDARD
 using UnityEngine;
@@ -39,7 +40,6 @@ namespace Mirror.Runtime.Logging
         }
     }
 
-#if NETSTANDARD
     public static class LogFactory
     {
         internal static readonly Dictionary<string, ILogger> loggers = new Dictionary<string, ILogger>();
@@ -61,7 +61,11 @@ namespace Mirror.Runtime.Logging
                 return logger;
             }
 
+#if NETSTANDARD
             logger = new Logger(Debug.unityLogger)
+#else
+            logger = new StandaloneLogger
+#endif
             {
                 // by default, log warnings and up
                 filterLogType = defaultLogLevel
@@ -91,5 +95,4 @@ namespace Mirror.Runtime.Logging
 
         public static bool ErrorEnabled(this ILogger logger) => logger.IsLogTypeAllowed(LogType.Warning);
     }
-#endif
 }

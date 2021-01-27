@@ -161,9 +161,7 @@ namespace Mirror.Runtime.Data
     // but they do all need to be extensions.
     public static class NetworkReaderExtensions
     {
-#if NETSTANDARD
         static readonly ILogger logger = LogFactory.GetLogger(typeof(NetworkReaderExtensions));
-#endif
 
         // cache encoding instead of creating it each time
         // 1000 readers before:  1MB GC, 30ms
@@ -355,14 +353,21 @@ namespace Mirror.Runtime.Data
         public static Vector2 ReadVector2(this NetworkReader reader) => new Vector2(reader.ReadSingle(), reader.ReadSingle());
         public static Vector3 ReadVector3(this NetworkReader reader) => new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         public static Vector4 ReadVector4(this NetworkReader reader) => new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+#if FIX
         public static Vector2Int ReadVector2Int(this NetworkReader reader) => new Vector2Int(reader.ReadPackedInt32(), reader.ReadPackedInt32());
         public static Vector3Int ReadVector3Int(this NetworkReader reader) => new Vector3Int(reader.ReadPackedInt32(), reader.ReadPackedInt32(), reader.ReadPackedInt32());
         public static Color ReadColor(this NetworkReader reader) => new Color(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         public static Color32 ReadColor32(this NetworkReader reader) => new Color32(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+#endif
         public static Quaternion ReadQuaternion(this NetworkReader reader) => new Quaternion(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+#if FIX
         public static Rect ReadRect(this NetworkReader reader) => new Rect(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+#endif
         public static Plane ReadPlane(this NetworkReader reader) => new Plane(reader.ReadVector3(), reader.ReadSingle());
+#if FIX
+
         public static Ray ReadRay(this NetworkReader reader) => new Ray(reader.ReadVector3(), reader.ReadVector3());
+#endif
 
         public static Matrix4x4 ReadMatrix4x4(this NetworkReader reader)
         {
@@ -418,6 +423,7 @@ namespace Mirror.Runtime.Data
 
         public static Guid ReadGuid(this NetworkReader reader) => new Guid(reader.ReadBytes(16));
 
+#if FIX
         public static NetworkIdentity ReadNetworkIdentity(this NetworkReader reader)
         {
             uint netId = reader.ReadPackedUInt32();
@@ -435,11 +441,11 @@ namespace Mirror.Runtime.Data
                 return identity;
             }
 
-#if NETSTANDARD
             if (logger.WarnEnabled()) logger.LogFormat(LogType.Warning, "ReadNetworkIdentity netId:{0} not found in spawned", netId);
-#endif
+
             return null;
         }
+#endif
 
         public static List<T> ReadList<T>(this NetworkReader reader)
         {
@@ -474,6 +480,7 @@ namespace Mirror.Runtime.Data
             return new Uri(reader.ReadString());
         }
 
+#if FIX
         public static NetworkBehaviour ReadNetworkBehaviour(this NetworkReader reader)
         {
             NetworkIdentity identity = reader.ReadNetworkIdentity();
@@ -501,5 +508,6 @@ namespace Mirror.Runtime.Data
             }
             return identity.gameObject;
         }
+#endif
     }
 }

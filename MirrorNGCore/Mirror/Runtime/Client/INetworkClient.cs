@@ -4,6 +4,7 @@ using Mirror.Runtime.Common;
 
 namespace Mirror.Runtime.Client
 {
+#if FIX
     public delegate NetworkIdentity SpawnHandlerDelegate(SpawnMessage msg);
 
     // Handles requests to unspawn objects on the client
@@ -31,6 +32,8 @@ namespace Mirror.Runtime.Client
 
         void PrepareToSpawnSceneObjects();
     }
+
+#endif
 
     public interface INetworkClient : INetworkBase
     {

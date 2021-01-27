@@ -1,13 +1,18 @@
-﻿#if NETSTANDARD
-using System;
+﻿using System;
 using System.Collections.Generic;
+#if NETSTANDARD
 using UnityEngine;
+#endif
 
-namespace Mirror
+namespace Mirror.Runtime.Logging
 {
+#if NETSTANDARD
     [ExecuteInEditMode]
     [AddComponentMenu("Network/LogSettings")]
     public class LogSettings : MonoBehaviour
+    #else
+    public class LogSettings
+#endif
     {
         [Serializable]
         public struct Level
@@ -16,7 +21,9 @@ namespace Mirror
             public LogType level;
         };
 
+#if NETSTANDARD
         [SerializeField]
+#endif
         public List<Level> Levels = new List<Level>();
 
         // Start is called before the first frame update
@@ -35,4 +42,3 @@ namespace Mirror
         }
     }
 }
-#endif

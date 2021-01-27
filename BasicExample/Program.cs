@@ -7,8 +7,10 @@ namespace Mirror.Example
     {
         static void Main(string[] args)
         {
-            NetworkServer server = new NetworkServer();
-            server.Transport = new KcpTransport();
+            NetworkServer server = new NetworkServer
+            {
+                Transport = new KcpTransport()
+            };
 
             _ = server.ListenAsync();
 

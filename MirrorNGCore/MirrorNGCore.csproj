@@ -11,6 +11,58 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Mirror.meta" />
+    <None Remove="Mirror\Runtime.meta" />
+    <None Remove="Mirror\Runtime\Client\INetworkClient.cs.meta" />
+    <None Remove="Mirror\Runtime\Client\NetworkClient.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\ExponentialMovingAverage.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\INetworkConnection.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\InvalidMessageException.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\Messages.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\NetworkAuthenticator.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\NetworkBehaviour.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\NetworkConnection.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\NetworkIdentity.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\NetworkTime.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\NotifyPacket.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\RemoteCallHelper.cs.meta" />
+    <None Remove="Mirror\Runtime\Common\Sequencer.cs.meta" />
+    <None Remove="Mirror\Runtime\Data\MessagePacker.cs.meta" />
+    <None Remove="Mirror\Runtime\Data\NetworkReader.cs.meta" />
+    <None Remove="Mirror\Runtime\Data\NetworkReaderPool.cs.meta" />
+    <None Remove="Mirror\Runtime\Data\NetworkWriter.cs.meta" />
+    <None Remove="Mirror\Runtime\Data\NetworkWriterPool.cs.meta" />
+    <None Remove="Mirror\Runtime\Logging\LogFactory.cs.meta" />
+    <None Remove="Mirror\Runtime\Logging\LogSettings.cs.meta" />
+    <None Remove="Mirror\Runtime\Logging\NetworkDiagnostics.cs.meta" />
+    <None Remove="Mirror\Runtime\Server\INetworkServer.cs.meta" />
+    <None Remove="Mirror\Runtime\Server\NetworkServer.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\IConnection.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\AssemblyInfo.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\Crc64.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\Decoder.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\Encoder.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\HashCash.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\IpEndpointComparer.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\Kcp.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\KcpClientConnection.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\KcpConnection.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\KcpServerConnection.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\KcpTransport.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\LICENSE.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\package.json" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\package.json.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\Segment.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\Unreliable.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Kcp\Utils.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\PipeConnection.cs.meta" />
+    <None Remove="Mirror\Runtime\Transport\Transport.cs.meta" />
+    <None Remove="Mirror\Runtime\Utils\StringHash.cs.meta" />
+    <None Remove="Mirror\Runtime\Utils\UNetwork.cs.meta" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="UniTask" Version="2.1.1" />
   </ItemGroup>
 

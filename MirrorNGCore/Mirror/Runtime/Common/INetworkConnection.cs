@@ -51,9 +51,11 @@ namespace Mirror.Runtime.Common
     /// </summary>
     public interface IVisibilityTracker
     {
+#if FIX
         void AddToVisList(NetworkIdentity identity);
         void RemoveFromVisList(NetworkIdentity identity);
         void RemoveObservers();
+#endif
     }
 
     /// <summary>
@@ -61,10 +63,12 @@ namespace Mirror.Runtime.Common
     /// </summary>
     public interface IObjectOwner
     {
+#if FIX
         NetworkIdentity Identity { get; set; }
         void RemoveOwnedObject(NetworkIdentity networkIdentity);
         void AddOwnedObject(NetworkIdentity networkIdentity);
         void DestroyOwnedObjects();
+#endif
     }
     /// <summary>
     /// A connection to a remote endpoint.

@@ -1,4 +1,5 @@
 ﻿using System;
+using Mirror.Runtime.Logging;
 
 #if NETSTANDARD
 using UnityEngine;
@@ -24,9 +25,7 @@ namespace Mirror.Runtime.Data
     /// </summary>
     public static class NetworkWriterPool
     {
-#if NETSTANDARD
         static readonly ILogger logger = LogFactory.GetLogger(typeof(NetworkWriterPool));
-#endif
 
         /// <summary>
         /// Size of the pool
@@ -96,9 +95,7 @@ namespace Mirror.Runtime.Data
             }
             else
             {
-#if NETSTANDARD
                 logger.LogWarning("NetworkWriterPool.Recycle, Pool was full leaving extra writer for GC");
-#endif
             }
         }
     }
