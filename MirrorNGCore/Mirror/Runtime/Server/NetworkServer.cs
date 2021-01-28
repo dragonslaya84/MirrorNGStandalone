@@ -5,6 +5,7 @@ using System.Reflection;
 using Cysharp.Threading.Tasks;
 using Mirror.Runtime.Client;
 using Mirror.Runtime.Common;
+using Mirror.Runtime.Entity;
 using Mirror.Runtime.Logging;
 using Mirror.Runtime.Transport;
 
@@ -136,9 +137,7 @@ namespace Mirror.Runtime.Server
         /// Number of active player objects across all connections on the server.
         /// <para>This is only valid on the host / server.</para>
         /// </summary>
-#if FIX
         public int NumPlayers => connections.Count(kv => kv.Identity != null);
-#endif
 
         /// <summary>
         /// A list of local connections on the server.
@@ -157,9 +156,7 @@ namespace Mirror.Runtime.Server
         /// </summary>
         public bool Active { get; private set; }
 
-#if FIX
         public readonly Dictionary<uint, NetworkIdentity> Spawned = new Dictionary<uint, NetworkIdentity>();
-#endif
 
         // Time kept in this server
         public readonly NetworkTime Time = new NetworkTime();
@@ -312,7 +309,7 @@ namespace Mirror.Runtime.Server
             // call OnStartHost AFTER SetupServer. this way we can use
             // NetworkServer.Spawn etc. in there too. just like OnStartServer
             // is called after the server is actually properly started.
-            OnStartHost.Invoke();
+            OnStartHost?.Invoke();
 
             logger.Log("NetworkServer StartHost");
             return task;
@@ -411,7 +408,6 @@ namespace Mirror.Runtime.Server
 
         readonly List<INetworkConnection> connectionsExcludeSelf = new List<INetworkConnection>(100);
 
-#if FIX
         /// <summary>
         /// this is like SendToReady - but it doesn't check the ready flag on the connection.
         /// this is used for ObjectDestroy messages.
@@ -444,7 +440,6 @@ namespace Mirror.Runtime.Server
                 NetworkConnection.Send(connectionsExcludeSelf, msg, channelId);
             }
         }
-#endif
 
         /// <summary>
         /// Send a message to all connected clients.
@@ -505,10 +500,8 @@ namespace Mirror.Runtime.Server
 
             Disconnected.Invoke(connection);
 
-#if FIX
             connection.DestroyOwnedObjects();
             connection.Identity = null;
-#endif
 
             if (connection == LocalConnection)
                 LocalConnection = null;
@@ -521,7 +514,6 @@ namespace Mirror.Runtime.Server
             Authenticated?.Invoke(conn);
         }
 
-#if FIX
         /// <summary>
         /// send this message to the player only
         /// </summary>
@@ -539,6 +531,5 @@ namespace Mirror.Runtime.Server
                 throw new InvalidOperationException("SendToClientOfPlayer: player has no NetworkIdentity: " + identity);
             }
         }
-#endif
     }
 }

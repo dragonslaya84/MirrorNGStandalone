@@ -5,6 +5,7 @@ using System.Net;
 using Cysharp.Threading.Tasks;
 using Mirror.Runtime.Common;
 using Mirror.Runtime.Data;
+using Mirror.Runtime.Entity;
 using Mirror.Runtime.Logging;
 using Mirror.Runtime.Transport;
 
@@ -33,10 +34,8 @@ namespace Mirror
         // Handles network messages on client and server
         internal delegate void NetworkMessageDelegate(INetworkConnection conn, NetworkReader reader, int channelId);
 
-#if FIX
         // internal so it can be tested
         private readonly HashSet<NetworkIdentity> visList = new HashSet<NetworkIdentity>();
-#endif
 
         // message handlers for this connection
         internal readonly Dictionary<int, NetworkMessageDelegate> messageHandlers = new Dictionary<int, NetworkMessageDelegate>();
@@ -70,8 +69,6 @@ namespace Mirror
         /// </summary>
         public virtual EndPoint Address => connection.GetEndPointAddress();
 
-#if FIX
-
         /// <summary>
         /// The NetworkIdentity for this connection.
         /// </summary>
@@ -86,7 +83,6 @@ namespace Mirror
         //            the netId anymore: https://github.com/vis2k/Mirror/issues/1380 . Works fine with NetworkIdentity pointers though.
         private readonly HashSet<NetworkIdentity> clientOwnedObjects = new HashSet<NetworkIdentity>();
 
-#endif
 
         /// <summary>
         /// Creates a new NetworkConnection with the specified address and connectionId
@@ -250,8 +246,6 @@ namespace Mirror
             return $"connection({Address})";
         }
 
-#if FIX
-
         public void AddToVisList(NetworkIdentity identity)
         {
             visList.Add(identity);
@@ -270,7 +264,6 @@ namespace Mirror
             }
             visList.Clear();
         }
-#endif
 
         internal void InvokeHandler(int msgType, NetworkReader reader, int channelId)
         {
@@ -336,7 +329,6 @@ namespace Mirror
             }
         }
 
-#if FIX
         public void AddOwnedObject(NetworkIdentity networkIdentity)
         {
             clientOwnedObjects.Add(networkIdentity);
@@ -353,21 +345,24 @@ namespace Mirror
             var tmp = new HashSet<NetworkIdentity>(clientOwnedObjects);
             foreach (NetworkIdentity netIdentity in tmp)
             {
+#if FIX
                 //dont destroy self yet.
                 if (netIdentity != null && netIdentity != Identity && Identity.ServerObjectManager != null)
                 {
                     Identity.ServerObjectManager.Destroy(netIdentity.gameObject);
-                }
+            }
+#endif
             }
 
+#if FIX
+            // Destroy the connections own identity.
             if (Identity != null && Identity.Server != null)
-                // Destroy the connections own identity.
                 Identity.ServerObjectManager.Destroy(Identity.gameObject);
+#endif
 
             // clear the hashset because we destroyed them all
             clientOwnedObjects.Clear();
         }
-#endif
 
         public async UniTask ProcessMessagesAsync()
         {

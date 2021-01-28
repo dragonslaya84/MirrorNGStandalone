@@ -91,7 +91,7 @@ namespace Mirror.Runtime.Transport.KCP
             HashCash token = await UniTask.RunOnThreadPool( () => HashCash.Mine(applicationName, bits));
 #else
             // TODO - HashCash token implement a better way for both unity and .net to work.
-            string applicationName = "Application.productName;";
+            string applicationName = "Application.productName";
 
             HashCash token = await UniTask.Run(() => HashCash.Mine(applicationName, bits));
 #endif

@@ -1,22 +1,17 @@
-﻿using Mirror.Runtime.Server;
-using Mirror.Runtime.Transport.KCP;
-
-namespace Mirror.Example
+﻿namespace Mirror.Example
 {
     class Program
     {
         static void Main(string[] args)
         {
-            NetworkServer server = new NetworkServer
-            {
-                Transport = new KcpTransport()
-            };
+            StandaloneNG mirror = new StandaloneNG();
 
-            _ = server.ListenAsync();
+            TestComponent comp = new TestComponent(mirror);
 
             while (true)
             {
-
+                mirror.Update();
+                comp.Update();
             }
         }
     }

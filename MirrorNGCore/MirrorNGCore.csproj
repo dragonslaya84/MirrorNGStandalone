@@ -32,6 +32,8 @@
     <None Remove="Mirror\Runtime\Data\NetworkReaderPool.cs.meta" />
     <None Remove="Mirror\Runtime\Data\NetworkWriter.cs.meta" />
     <None Remove="Mirror\Runtime\Data\NetworkWriterPool.cs.meta" />
+    <None Remove="Mirror\Runtime\Entity\NetworkBehaviour.cs.meta" />
+    <None Remove="Mirror\Runtime\Entity\NetworkIdentity.cs.meta" />
     <None Remove="Mirror\Runtime\Logging\LogFactory.cs.meta" />
     <None Remove="Mirror\Runtime\Logging\LogSettings.cs.meta" />
     <None Remove="Mirror\Runtime\Logging\NetworkDiagnostics.cs.meta" />
@@ -60,9 +62,41 @@
     <None Remove="Mirror\Runtime\Transport\Transport.cs.meta" />
     <None Remove="Mirror\Runtime\Utils\StringHash.cs.meta" />
     <None Remove="Mirror\Runtime\Utils\UNetwork.cs.meta" />
+    <None Remove="Mirror\Weaver\AssemblyInfo.cs.meta" />
+    <None Remove="Mirror\Weaver\Extensions.cs.meta" />
+    <None Remove="Mirror\Weaver\IWeaverLogger.cs.meta" />
+    <None Remove="Mirror\Weaver\Logger.cs.meta" />
+    <None Remove="Mirror\Weaver\MethodExtensions.cs.meta" />
+    <None Remove="Mirror\Weaver\MirrorILPostProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\ModuleExtension.cs.meta" />
+    <None Remove="Mirror\Weaver\PostProcessorAssemblyResolver.cs.meta" />
+    <None Remove="Mirror\Weaver\PostProcessorReflectionImporter.cs.meta" />
+    <None Remove="Mirror\Weaver\PostProcessorReflectionImporterProvider.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors.meta" />
+    <None Remove="Mirror\Weaver\Processors\ClientRpcProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\CodePass.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\MonoBehaviourProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\NetworkBehaviourProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\PropertySiteProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\ReaderWriterProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\RpcProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\ServerClientAttributeProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\ServerRpcProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\SyncObjectProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Processors\SyncVarProcessor.cs.meta" />
+    <None Remove="Mirror\Weaver\Readers.cs.meta" />
+    <None Remove="Mirror\Weaver\Resolvers.cs.meta" />
+    <None Remove="Mirror\Weaver\TypeExtensions.cs.meta" />
+    <None Remove="Mirror\Weaver\TypeReferenceComparer.cs.meta" />
+    <None Remove="Mirror\Weaver\Unity.Mirror.CodeGen.asmdef" />
+    <None Remove="Mirror\Weaver\Unity.Mirror.CodeGen.asmdef.meta" />
+    <None Remove="Mirror\Weaver\Weaver.cs.meta" />
+    <None Remove="Mirror\Weaver\WeaverExceptions.cs.meta" />
+    <None Remove="Mirror\Weaver\Writers.cs.meta" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.3" />
     <PackageReference Include="UniTask" Version="2.1.1" />
   </ItemGroup>
 

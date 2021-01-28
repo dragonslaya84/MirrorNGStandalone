@@ -1,6 +1,7 @@
 ﻿using System;
 using Mirror.Runtime.Client;
 using Mirror.Runtime.Common;
+using Mirror.Runtime.Entity;
 
 namespace Mirror.Runtime.Server
 {
@@ -49,7 +50,6 @@ namespace Mirror.Runtime.Server
         /// <param name="channelId">The channel to send data on.</param>
         void SendToAll<T>(T msg, byte channelId = (byte) Channels.Reliable);
 
-#if FIX
         /// <summary>
         /// 
         /// </summary>
@@ -58,7 +58,6 @@ namespace Mirror.Runtime.Server
         /// <param name="msg">The message data to send to client.</param>
         /// <param name="channelId">The channel to send data on.</param>
         void SendToClientOfPlayer<T>(NetworkIdentity identity, T msg, byte channelId = (byte) Channels.Reliable);
-#endif
 
     }
 }

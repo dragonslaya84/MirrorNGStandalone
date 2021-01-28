@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Mirror.Runtime.Common;
+using Mirror.Runtime.Entity;
 using Mirror.Runtime.Logging;
 using Mirror.Runtime.Server;
 using Mirror.Runtime.Transport;
@@ -45,9 +46,7 @@ namespace Mirror.Runtime.Client
 #endif
         public NetworkAuthenticator authenticator;
 
-#if FIX
         internal readonly Dictionary<uint, NetworkIdentity> spawned = new Dictionary<uint, NetworkIdentity>();
-#endif
 
 #if NETSTANDARD
         /// <summary>
@@ -89,9 +88,7 @@ namespace Mirror.Runtime.Client
         /// <summary>
         /// NetworkIdentity of the localPlayer
         /// </summary>
-#if FIX
         public NetworkIdentity LocalPlayer => Connection?.Identity;
-#endif
 
         internal ConnectState connectState = ConnectState.Disconnected;
 
@@ -113,7 +110,6 @@ namespace Mirror.Runtime.Client
         /// <summary>
         /// List of all objects spawned in this client
         /// </summary>
-#if FIX
         public Dictionary<uint, NetworkIdentity> Spawned
         {
             get
@@ -125,7 +121,6 @@ namespace Mirror.Runtime.Client
                     return spawned;
             }
         }
-#endif
 
         /// <summary>
         /// The host server
@@ -145,7 +140,7 @@ namespace Mirror.Runtime.Client
 #if NETSTANDARD
         public UniTask ConnectAsync(string serverIp)
 #else
-        public UniTask ConnectAsync(string serverIp, Transport.Transport transport)
+        public UniTask ConnectAsync(string serverIp)
 #endif
         {
             if (logger.LogEnabled()) logger.Log("Client address:" + serverIp);
@@ -156,7 +151,7 @@ namespace Mirror.Runtime.Client
                 Scheme = Transport.Scheme.First(),
             };
 
-            return ConnectAsync(builder.Uri, transport);
+            return ConnectAsync(builder.Uri);
         }
 
         /// <summary>
@@ -168,7 +163,7 @@ namespace Mirror.Runtime.Client
 #if NETSTANDARD
         public UniTask ConnectAsync(string serverIp, ushort port)
 #else
-        public UniTask ConnectAsync(string serverIp, ushort port, Transport.Transport transport)
+        public UniTask ConnectAsync(string serverIp, ushort port)
 #endif
         {
             if (logger.LogEnabled()) logger.Log("Client address and port:" + serverIp + ":" + port);
@@ -179,11 +174,7 @@ namespace Mirror.Runtime.Client
                 Scheme = Transport.Scheme.First()
             };
 
-#if NETSTANDARD
             return ConnectAsync(builder.Uri);
-#else
-            return ConnectAsync(builder.Uri, transport);
-#endif
         }
 
         /// <summary>
@@ -194,15 +185,14 @@ namespace Mirror.Runtime.Client
 #if NETSTANDARD
         public async UniTask ConnectAsync(Uri uri)
 #else
-        public async UniTask ConnectAsync(Uri uri, Transport.Transport transport)
+        public async UniTask ConnectAsync(Uri uri)
 #endif
         {
             if (logger.LogEnabled()) logger.Log("Client Connect: " + uri);
+
 #if NETSTANDARD
             if (Transport == null)
                 Transport = GetComponent<Transport.Transport>();
-#else
-            Transport = transport;
 #endif
 
             if (Transport == null)
