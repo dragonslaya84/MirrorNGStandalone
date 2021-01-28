@@ -19,7 +19,7 @@ namespace Mirror.Weaver
             // replace all field access with property access for syncvars
             CodePass.ForEachInstruction(moduleDef, WeavedMethods, ProcessInstruction);
 
-            Console.WriteLine("  ProcessSitesModule " + moduleDef.Name + " elapsed time:" + (DateTime.Now - startTime));
+            Console.WriteLine("  ProcessSitesModule " + moduleDef.Name + " elapsed time: " + (DateTime.Now - startTime));
         }
 
         private static bool WeavedMethods(MethodDefinition md) =>

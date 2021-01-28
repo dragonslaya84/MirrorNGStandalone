@@ -104,9 +104,11 @@ namespace Mirror.Weaver
                 {
                     if (td.IsClass && td.BaseType.CanBeResolved())
                     {
-                        modified |= WeaveNetworkBehavior(td);
 #if FIX
+                        modified |= WeaveNetworkBehavior(td);
                         modified |= attributeProcessor.Process(td);
+#else
+                        modified = true;
 #endif
                     }
                 }
