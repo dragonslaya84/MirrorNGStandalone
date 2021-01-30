@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MirrorNGCore\MirrorNGCore.csproj" />
+    <ProjectReference Include="..\MirrorNGCore\Mirror.csproj" />
   </ItemGroup>
 
 </Project>

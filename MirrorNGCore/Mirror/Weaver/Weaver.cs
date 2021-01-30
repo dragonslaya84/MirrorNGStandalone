@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 #if NETSTANDARD
@@ -263,7 +265,7 @@ namespace Mirror.Weaver
 
             if (File.Exists(newExecutableFileName))
             {
-                File.Delete(newExecutableFileName);
+                //File.Delete(newExecutableFileName);
             }
 
             string toPath = temporaryPath + "temp.il";
@@ -329,11 +331,39 @@ namespace Mirror.Weaver
         }
         #endregion
 
-        public bool Execute(string compiledAssembly)
+        public void Execute()
         {
-            var test = Disassemble(compiledAssembly);
+            string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            return Assemble(test, compiledAssembly);
+            var files = Directory.GetFiles(assemblyFolder); //get all files
+
+            foreach (var file in files)
+            {
+                AssemblyName assemblyName = null;
+
+                try
+                {
+                    assemblyName = AssemblyName.GetAssemblyName(file);
+
+                    var asm = Assembly.LoadFile(file); //load valid assembly into the main AppDomain
+
+                    if (WillProcess(asm))
+                        Weave(asm.Location);
+                }
+                catch (Exception e)
+                {
+                    //Console.WriteLine(e);
+                }
+            }
+        }
+
+        public bool WillProcess(Assembly compiledAssembly)
+        {
+            var name = compiledAssembly.GetName().Name;
+
+            return name.Equals("Mirror") ||
+            compiledAssembly.GetReferencedAssemblies().Any(filePath =>
+                Path.GetFileNameWithoutExtension(filePath.Name) == "Mirror");
         }
 
         private AssemblyDefinition Weave(string compiledAssembly)
@@ -361,6 +391,8 @@ namespace Mirror.Weaver
                     return CurrentAssembly;
 
                 rwProcessor.InitializeReaderAndWriters();
+
+                CurrentAssembly.Write(compiledAssembly);
 
                 return CurrentAssembly;
             }

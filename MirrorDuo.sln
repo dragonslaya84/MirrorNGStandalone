@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicExample", "BasicExample\BasicExample.csproj", "{C8E19A86-3B5B-46E1-BF06-F109B7DEF070}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MirrorNGCore", "MirrorNGCore\MirrorNGCore.csproj", "{2C2D5979-B5CD-4374-9A62-9DD3EF4AFE1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mirror", "MirrorNGCore\Mirror.csproj", "{2C2D5979-B5CD-4374-9A62-9DD3EF4AFE1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
