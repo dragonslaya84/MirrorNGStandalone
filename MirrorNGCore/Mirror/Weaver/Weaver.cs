@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -114,7 +115,8 @@ namespace Mirror.Weaver
                 }
 
                 watch.Stop();
-                Console.WriteLine("Weave behaviours and messages took" + watch.ElapsedMilliseconds + " milliseconds");
+
+                Console.WriteLine("Weave behaviours and messages took " + watch.ElapsedMilliseconds + " milliseconds");
 
                 if (modified)
                     propertySiteProcessor.Process(module);
@@ -188,16 +190,162 @@ namespace Mirror.Weaver
         }
 #endif
 #if !NETSTANDARD
-        public AssemblyDefinition Weave(string compiledAssembly)
+
+        #region Burrow Code
+        /// <summary>
+        /// Burrowed code from there https://github.com/coreylasley/CILWeaverProfiler. Thanks to this guy for simple example.
+        /// </summary>
+
+        /// <summary>
+        /// Closest paths to the ILASM and ILDASM executables (comma delimited)
+        /// </summary>
+        public string ilasmPaths { get; set; } = @"C:\Program Files (x86)\Microsoft SDKs\Windows\;C:\Windows\Microsoft.NET\Framework\v4.0.30319\";
+
+        private string fileExtension;
+
+        /// <summary>
+        /// Locates the latest version of an executable in all sub-directories of a root path if the executable is not found in the path specified
+        /// </summary>
+        /// <param name="rootPath"></param>
+        /// <param name="exeToFind"></param>
+        /// <returns></returns>
+        private string GetLatestILExe(string rootPaths, string exeToFind)
+        {
+            string latestPath = "";
+
+            string[] paths = rootPaths.Split(';');
+
+            if (File.Exists(paths[0] + exeToFind))
+            {
+                latestPath = paths[0] + exeToFind;
+            }
+            else
+            {
+                DateTime latestDate = DateTime.MinValue;
+
+                foreach (string p in paths)
+                {
+                    try
+                    {
+                        string[] files = Directory.GetFiles(p, exeToFind, SearchOption.AllDirectories);
+
+                        foreach (string file in files)
+                        {
+                            FileInfo fi = new FileInfo(file);
+                            if (fi.CreationTime > latestDate)
+                            {
+                                latestDate = fi.CreationTime;
+                                latestPath = file;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("ERROR: " + ex);
+                    }
+                }
+            }
+
+            return latestPath;
+        }
+
+        /// <summary>
+        /// Assembles IL code into an executable
+        /// </summary>
+        /// <param name="IL"></param>
+        /// <param name="newExecutableFileName"></param>
+        /// <returns>bool representing assembly success</returns>
+        private bool Assemble(string IL, string newExecutableFileName, string temporaryPath = @"C:\Windows\Temp\")
+        {
+            bool ret = true;
+
+            IL = IL.Replace("***", "//");
+
+            if (File.Exists(newExecutableFileName))
+            {
+                File.Delete(newExecutableFileName);
+            }
+
+            string toPath = temporaryPath + "temp.il";
+
+            File.WriteAllText(toPath, IL);
+
+            string ilasm = GetLatestILExe(ilasmPaths, "ilasm.exe");
+            string workingPath = Path.GetDirectoryName(ilasm);
+
+            ProcessStartInfo procStartInfo = new ProcessStartInfo(ilasm, toPath + " /" + fileExtension)
+            {
+                WorkingDirectory = workingPath
+            };
+
+            Process process = new Process {StartInfo = procStartInfo};
+
+            process.Start();
+            process.WaitForExit();
+
+            if (File.Exists(toPath))
+            {
+                File.Delete(toPath);
+            }
+
+            if (!File.Exists(newExecutableFileName))
+            {
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Disassembles the executable to IL code
+        /// </summary>
+        /// <param name="executableFileName"></param>
+        /// <param name="temporaryPath"></param>
+        /// <returns>The executable's disassembled IL code</returns>
+        private string Disassemble(string executableFileName, string temporaryPath = @"C:\Windows\Temp\")
+        {
+            Weave(executableFileName);
+
+            string text = "";
+            string toPath = temporaryPath + "temp.il";
+
+            fileExtension = Path.GetExtension(executableFileName).Replace(".", "");
+
+            ProcessStartInfo procStartInfo = new ProcessStartInfo(GetLatestILExe(ilasmPaths, "ildasm.exe"),
+                executableFileName + " /output:" + toPath) {CreateNoWindow = false};
+
+            Process process = new Process {StartInfo = procStartInfo};
+
+            process.Start();
+            process.WaitForExit();
+
+            if (File.Exists(toPath))
+            {
+                text = File.ReadAllText(toPath);
+                File.Delete(toPath);
+            }
+
+            return text;
+        }
+        #endregion
+
+        public bool Execute(string compiledAssembly)
+        {
+            var test = Disassemble(compiledAssembly);
+
+            return Assemble(test, compiledAssembly);
+        }
+
+        private AssemblyDefinition Weave(string compiledAssembly)
         {
             try
             {
-                CurrentAssembly = AssemblyDefinition.ReadAssembly((compiledAssembly));
+                CurrentAssembly = AssemblyDefinition.ReadAssembly(compiledAssembly);
 
                 ModuleDefinition module = CurrentAssembly.MainModule;
                 readers = new Readers(module, logger);
                 writers = new Writers(module, logger);
-                var rwstopwatch = System.Diagnostics.Stopwatch.StartNew();
+                var rwstopwatch = Stopwatch.StartNew();
                 propertySiteProcessor = new PropertySiteProcessor();
                 var rwProcessor = new ReaderWriterProcessor(module, readers, writers);
 
