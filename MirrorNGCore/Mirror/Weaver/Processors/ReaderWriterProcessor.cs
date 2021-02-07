@@ -9,6 +9,8 @@ using Mirror.Runtime.Data;
 using Mirror.Runtime.Server;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using MethodAttributes = Mono.Cecil.MethodAttributes;
+
 #if NETSTANDARD
 using UnityEditor;
 using UnityEngine;
@@ -286,7 +288,33 @@ namespace Mirror.Weaver
 
 #if NETSTANDARD
             ConstructorInfo attributeconstructor = typeof(RuntimeInitializeOnLoadMethodAttribute).GetConstructor(new [] { typeof(RuntimeInitializeLoadType)});
+#else
+            var staticConstructorAttributes =
+                Mono.Cecil.MethodAttributes.Private |
+                Mono.Cecil.MethodAttributes.HideBySig |
+                Mono.Cecil.MethodAttributes.Static |
+                Mono.Cecil.MethodAttributes.SpecialName |
+                Mono.Cecil.MethodAttributes.RTSpecialName;
 
+            MethodDefinition staticConstructor = new MethodDefinition(".cctor", staticConstructorAttributes, module.TypeSystem.Void);
+            module.GeneratedClass().Methods.Add(staticConstructor);
+
+            module.GeneratedClass().IsBeforeFieldInit = false;
+
+            var il = staticConstructor.Body.GetILProcessor();
+            il.Append(Instruction.Create(OpCodes.Ret));
+
+            Instruction ldMethodName = il.Create(OpCodes.Ldstr, module.GeneratedClass().FullName);
+            Instruction callOurMethod = il.Create(OpCodes.Call, module.GeneratedClass());
+
+            Instruction firstInstruction = staticConstructor.Body.Instructions[0];
+            // Inserts the callOurMethod instruction before the first instruction
+
+
+            il.InsertBefore(firstInstruction, ldMethodName);
+            il.InsertAfter(ldMethodName, callOurMethod);
+#endif
+#if NETSTANDARD
             var customAttributeRef = new CustomAttribute(module.ImportReference(attributeconstructor));
             customAttributeRef.ConstructorArguments.Add(new CustomAttributeArgument(module.ImportReference<RuntimeInitializeLoadType>(), RuntimeInitializeLoadType.BeforeSceneLoad));
             rwInitializer.CustomAttributes.Add(customAttributeRef);
@@ -298,6 +326,8 @@ namespace Mirror.Weaver
                 var initializeCustomConstructorRef = new CustomAttribute(module.ImportReference(initializeOnLoadConstructor));
                 rwInitializer.CustomAttributes.Add(initializeCustomConstructorRef);
             }
+#else
+
 #endif
 
             ILProcessor worker = rwInitializer.Body.GetILProcessor();

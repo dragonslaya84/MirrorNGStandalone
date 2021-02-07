@@ -96,7 +96,7 @@ namespace Mirror.Weaver
             {
                 bool modified = false;
 
-                var watch = System.Diagnostics.Stopwatch.StartNew();
+                var watch = Stopwatch.StartNew();
 
                 watch.Start();
                 var attributeProcessor = new ServerClientAttributeProcessor(logger);
@@ -192,11 +192,11 @@ namespace Mirror.Weaver
         }
 #endif
 #if !NETSTANDARD
-        public void Execute()
+        public void Execute(string pathPatch)
         {
-            string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string assemblyFolder = Path.GetDirectoryName(pathPatch);
 
-            var files = Directory.GetFiles(assemblyFolder); //get all files
+            var files = Directory.GetFiles(pathPatch); //get all files
 
             foreach (var file in files)
             {
@@ -204,6 +204,8 @@ namespace Mirror.Weaver
 
                 try
                 {
+                    if (!file.Contains("BasicExample.dll")) continue;
+
                     assemblyName = AssemblyName.GetAssemblyName(file);
 
                     var asm = Assembly.LoadFile(file); //load valid assembly into the main AppDomain
@@ -211,9 +213,9 @@ namespace Mirror.Weaver
                     if (WillProcess(asm))
                         Weave(asm.Location);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    //Console.WriteLine(e);
+                    Console.WriteLine(ex);
                 }
             }
         }
@@ -221,6 +223,9 @@ namespace Mirror.Weaver
         public bool WillProcess(Assembly compiledAssembly)
         {
             var name = compiledAssembly.GetName().Name;
+
+            if (name.Contains("CodeGenerator") || name.Contains(".pdb"))
+                return false;
 
             return name.Equals("Mirror") ||
             compiledAssembly.GetReferencedAssemblies().Any(filePath =>
@@ -231,9 +236,10 @@ namespace Mirror.Weaver
         {
             try
             {
-                CurrentAssembly = AssemblyDefinition.ReadAssembly(compiledAssembly);
+                CurrentAssembly =
+                    AssemblyDefinition.ReadAssembly(compiledAssembly);
 
-                ModuleDefinition module = CurrentAssembly.MainModule;
+                var module = CurrentAssembly.MainModule;
                 readers = new Readers(module, logger);
                 writers = new Writers(module, logger);
                 var rwstopwatch = Stopwatch.StartNew();
@@ -242,7 +248,8 @@ namespace Mirror.Weaver
 
                 bool modified = rwProcessor.Process();
                 rwstopwatch.Stop();
-                Console.WriteLine($"Find all reader and writers took {rwstopwatch.ElapsedMilliseconds} milliseconds");
+                Console.WriteLine(
+                    $"Find all reader and writers took {rwstopwatch.ElapsedMilliseconds} milliseconds");
 
                 Console.WriteLine($"Script Module: {module.Name}");
 
@@ -253,13 +260,17 @@ namespace Mirror.Weaver
 
                 rwProcessor.InitializeReaderAndWriters();
 
-                CurrentAssembly.Write(compiledAssembly);
+                Directory.CreateDirectory(Path.GetDirectoryName(compiledAssembly) + "\\weave\\");
+
+                CurrentAssembly.Write(Path.GetDirectoryName(compiledAssembly) + "\\weave\\" +
+                                      Path.GetFileName(compiledAssembly));
 
                 return CurrentAssembly;
+
             }
             catch (Exception e)
             {
-                logger.Error("Exception :" + e);
+                logger.Error("Exception :" + e.StackTrace);
                 return null;
             }
 #endif

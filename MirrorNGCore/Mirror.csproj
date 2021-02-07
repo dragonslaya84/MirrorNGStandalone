@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -62,37 +62,6 @@
     <None Remove="Mirror\Runtime\Transport\Transport.cs.meta" />
     <None Remove="Mirror\Runtime\Utils\StringHash.cs.meta" />
     <None Remove="Mirror\Runtime\Utils\UNetwork.cs.meta" />
-    <None Remove="Mirror\Weaver\AssemblyInfo.cs.meta" />
-    <None Remove="Mirror\Weaver\Extensions.cs.meta" />
-    <None Remove="Mirror\Weaver\IWeaverLogger.cs.meta" />
-    <None Remove="Mirror\Weaver\Logger.cs.meta" />
-    <None Remove="Mirror\Weaver\MethodExtensions.cs.meta" />
-    <None Remove="Mirror\Weaver\MirrorILPostProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\ModuleExtension.cs.meta" />
-    <None Remove="Mirror\Weaver\PostProcessorAssemblyResolver.cs.meta" />
-    <None Remove="Mirror\Weaver\PostProcessorReflectionImporter.cs.meta" />
-    <None Remove="Mirror\Weaver\PostProcessorReflectionImporterProvider.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors.meta" />
-    <None Remove="Mirror\Weaver\Processors\ClientRpcProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\CodePass.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\MonoBehaviourProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\NetworkBehaviourProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\PropertySiteProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\ReaderWriterProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\RpcProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\ServerClientAttributeProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\ServerRpcProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\SyncObjectProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Processors\SyncVarProcessor.cs.meta" />
-    <None Remove="Mirror\Weaver\Readers.cs.meta" />
-    <None Remove="Mirror\Weaver\Resolvers.cs.meta" />
-    <None Remove="Mirror\Weaver\TypeExtensions.cs.meta" />
-    <None Remove="Mirror\Weaver\TypeReferenceComparer.cs.meta" />
-    <None Remove="Mirror\Weaver\Unity.Mirror.CodeGen.asmdef" />
-    <None Remove="Mirror\Weaver\Unity.Mirror.CodeGen.asmdef.meta" />
-    <None Remove="Mirror\Weaver\Weaver.cs.meta" />
-    <None Remove="Mirror\Weaver\WeaverExceptions.cs.meta" />
-    <None Remove="Mirror\Weaver\Writers.cs.meta" />
   </ItemGroup>
 
   <ItemGroup>

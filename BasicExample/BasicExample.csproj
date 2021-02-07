@@ -1,14 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <StartupObject>Mirror.Example.Program</StartupObject>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+  </PropertyGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MirrorNGCore\Mirror.csproj" />
   </ItemGroup>
 
+  <Target Name="AfterBuild">
+    <Exec Command="D:\Mirror\MirrorNGCore\CodeGenerator\bin\Debug\net5.0\CodeGenerator.exe D:\Mirror\MirrorNGCore\BasicExample\bin\Debug\net5.0" />
+    <Exec Command="xcopy D:\Mirror\MirrorNGCore\BasicExample\bin\Debug\net5.0\weave\BasicExample.dll D:\Mirror\MirrorNGCore\BasicExample\bin\Debug\net5.0\BasicExample.dll /y"/>
+  </Target>
 </Project>
